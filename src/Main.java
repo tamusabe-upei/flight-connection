@@ -1,3 +1,5 @@
+import com.sun.source.tree.IfTree;
+
 import java.util.Scanner;
 
 public class Main {
@@ -11,10 +13,16 @@ public class Main {
         Airport yyz = new Airport("YYZ", "Toronto", "ON","Pearson Intl");
         Airport ywg = new Airport("YWG", "Winnipeg", "MB","Winnipeg Richardson Intl");
 
+        Airport []airpots = {yvr, yhz, yyc, yyz, yeg, ywg};
+
+
         Airline aircanada = new Airline("AC", "Air Canada");
         Airline westjet = new Airline("WS", "WestJet");
         Airline porter = new Airline("PD", "Porter");
         Airline flair = new Airline("F8", "Flair");
+
+
+        Airline []airlines = {aircanada, westjet, porter, flair};
 
         // Create Flights
         Flight f1 = new Flight("AC101", aircanada, yvr, yyz, 299.99, "Tue, 14:00", 12);
@@ -34,63 +42,92 @@ public class Main {
         Flight f15 = new Flight("AC105", aircanada, ywg, yhz, 399.99, "Wed, 08:00", 5);
         Flight f16 = new Flight("WS253", westjet, yhz, ywg, 389.50, "Thu, 18:30", 5);
 
+        Flight []flights = {f1, f2, f3, f4, f5, f6,f7, f8, f9, f10, f11, f12, f13, f14, f15, f16};
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter the airport code: ");
         String airportCode = scanner.nextLine();
 
-        if (airportCode.equals(yyc.getCode())) {
-            Flight[] departedFLights = yyc.getFlights();
-            System.out.println("Flight Departed From YYC:");
-            for (Flight flight: departedFLights) {
-                if (flight != null) {
-                    flight.information();
-                    System.out.println("--------------------------------");
+        Airport selectedAirport = null;
+        for (Airport airport:airpots) {
+            if(airportCode.equals(airport.getCode())) {
+                selectedAirport = airport;
+                Flight[] departedFLights = airport.getFlights();
+                System.out.println("Flight Departed From"+ airport.getCode()+ ":");
+                for (Flight flight: departedFLights) {
+                    if (flight != null) {
+                        flight.information();
+                        System.out.println("--------------------------------");
+                    }
                 }
-            }
 
-        } else if (airportCode.equals(yeg.getCode())) {
-            Flight[] departedFLights = yeg.getFlights();
-            System.out.println("Flight Departed From YEG:");
-            for (Flight flight: departedFLights) {
-                if (flight != null) {
-                    flight.information();
-                    System.out.println("--------------------------------");
-                }
+                break;
             }
-        } else if (airportCode.equals(yyz.getCode())) {
-            Flight[] departedFLights = yeg.getFlights();
-            System.out.println("Flight Departed From YEG:");
-            for (Flight flight: departedFLights) {
-                if (flight != null) {
-                    flight.information();
-                    System.out.println("--------------------------------");
-                }
-            }
-        } else if (airportCode.equals(ywg.getCode())) {
-            Flight[] departedFLights = ywg.getFlights();
-            System.out.println("Flight Departed From YWG:");
-            for (Flight flight: departedFLights) {
-                if (flight != null) {
-                    flight.information();
-                    System.out.println("--------------------------------");
-                }
-            }
-        } else if (airportCode.equals(yhz.getCode())) {
-            Flight[] departedFLights = yhz.getFlights();
-            System.out.println("Flight Departed From YHZ:");
-            for (Flight flight: departedFLights) {
-                if (flight != null) {
-                    flight.information();
-                    System.out.println("--------------------------------");
-                }
-            }
-        } else {
-            System.out.println("Invalid Airport");
+        }
+
+        if(selectedAirport == null) {
+            System.out.println("Invalid Airport Code");
             System.out.println("--------------------------------");
         }
 
 
+        Booking []bookings = new Booking[20];
+        int bookedCount = 0;
 
+        for (int i = 0; i < 3; i++) {
+            System.out.print("Enter the flight no: ");
+            String flightNumber = scanner.nextLine();
+
+            Flight selectedFlight = null;
+            for (Flight flight: flights) {
+                if(flight.getFlightNumber().equals(flightNumber)) {
+                    selectedFlight = flight;
+                    break;
+                }
+            }
+
+            if (selectedFlight == null) {
+                System.out.println("Invalid Flight Number");
+                continue;
+            }
+
+            System.out.print("Enter the passenger name: ");
+            String passengerName = scanner.nextLine();
+
+            System.out.print("Enter the travel date: ");
+            String travelDate = scanner.nextLine();
+
+            int bookingCount = 0;
+            for (Booking booking: bookings) {
+                if (booking != null && booking.getFlight().equals(selectedFlight) && booking.getDate().equals(travelDate)) {
+                    bookingCount++;
+                }
+            }
+
+            int seatLeft = selectedFlight.getSeats() - bookedCount;
+            double totalFare = selectedFlight.getBaseFare();
+            if(seatLeft <= 2) {
+                totalFare = 2 * totalFare;
+            } else if(seatLeft == 3) {
+                totalFare = 1.5 * totalFare;
+            }
+            Booking newBooking = new Booking(selectedFlight, travelDate, passengerName, totalFare) ;
+            bookings[bookedCount++] = newBooking;
+
+            System.out.println("\nBooking Confirmed:");
+            System.out.println("-----------------------------");
+            System.out.println("Passenger: " + passengerName);
+            System.out.println("Date: " + travelDate);
+            System.out.println("Flight: " + selectedFlight.getFlightNumber() + " (" +
+                    selectedFlight.getAirline().getName() + ")");
+            System.out.println("Route: " + selectedFlight.getSource().getCode() + " → " +
+                    selectedFlight.getDestination().getCode());
+            System.out.printf("Total Price: $%.2f%n", totalFare);
+            System.out.println("Seats left: " + (seatLeft - 1));
+            System.out.println("-----------------------------");
+
+
+        }
     }
 }
