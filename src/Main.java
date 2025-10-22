@@ -18,8 +18,8 @@ public class Main {
 
         Airline aircanada = new Airline("AC", "Air Canada");
         Airline westjet = new Airline("WS", "WestJet");
-        Airline porter = new Airline("PD", "Porter");
-        Airline flair = new Airline("F8", "Flair");
+        Airline porter = new Airline("PD", "Porter Airline");
+        Airline flair = new Airline("F8", "Flair Airline");
 
 
         Airline []airlines = {aircanada, westjet, porter, flair};
@@ -98,6 +98,9 @@ public class Main {
             System.out.print("Enter the travel date: ");
             String travelDate = scanner.nextLine();
 
+            System.out.print("Do you want booking with baggage(Yes/No): ");
+            String bookingChoice = scanner.nextLine();
+
             int bookingCount = 0;
             for (Booking booking: bookings) {
                 if (booking != null && booking.getFlight().equals(selectedFlight) && booking.getDate().equals(travelDate)) {
@@ -112,8 +115,24 @@ public class Main {
             } else if(seatLeft == 3) {
                 totalFare = 1.5 * totalFare;
             }
-            Booking newBooking = new Booking(selectedFlight, travelDate, passengerName, totalFare) ;
-            bookings[bookedCount++] = newBooking;
+
+            Booking newBooking = null;
+            if (bookingChoice.equals("Yes")) {
+                System.out.print("Enter the number of bags: ");
+                int baggageCount = scanner.nextInt();
+
+                System.out.print("Enter the total weights of bags: ");
+                double baggageWeight = scanner.nextDouble();
+
+                totalFare = totalFare + baggageWeight * 10;
+
+                newBooking = new PremiumBooking(selectedFlight, travelDate, passengerName, totalFare, baggageCount, baggageWeight) ;
+                bookings[bookedCount++] = newBooking;
+            } else {
+                newBooking = new Booking(selectedFlight, travelDate, passengerName, totalFare) ;
+                bookings[bookedCount++] = newBooking;
+            }
+
 
             System.out.println("\nBooking Confirmed:");
             System.out.println("-----------------------------");
