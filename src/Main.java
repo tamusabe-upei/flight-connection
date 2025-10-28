@@ -93,8 +93,7 @@ public class Main {
         }
 
 
-        Booking []bookings = new Booking[20];
-        int bookedCount = 0;
+        ResizingBookingArray sizeableBookings = new ResizingBookingArray();
 
         for (int i = 0; i < 3; i++) {
             System.out.print("Enter the flight no: ");
@@ -122,7 +121,7 @@ public class Main {
             System.out.print("Do you want booking with baggage(Yes/No): ");
             String bookingChoice = scanner.nextLine();
 
-           double totalFare = dynamicPrice(selectedFlight, travelDate, bookings);
+           double totalFare = dynamicPrice(selectedFlight, travelDate, sizeableBookings.getBookings());
 
             Booking newBooking = null;
             if (bookingChoice.equals("Yes")) {
@@ -133,12 +132,11 @@ public class Main {
                 double baggageWeight = scanner.nextDouble();
 
                 totalFare = totalFare + baggageWeight * 10;
-
                 newBooking = new PremiumBooking(selectedFlight, travelDate, passengerName, totalFare, baggageCount, baggageWeight) ;
-                bookings[bookedCount++] = newBooking;
+                sizeableBookings.add(newBooking);
             } else {
                 newBooking = new Booking(selectedFlight, travelDate, passengerName, totalFare) ;
-                bookings[bookedCount++] = newBooking;
+                sizeableBookings.add(newBooking);
             }
 
 
@@ -151,7 +149,7 @@ public class Main {
             System.out.println("Route: " + selectedFlight.getSource().getCode() + " → " +
                     selectedFlight.getDestination().getCode());
             System.out.printf("Total Price: $%.2f%n", totalFare);
-            System.out.println("Seats left: " + availableSeats(selectedFlight, travelDate, sizableBookings.getBookings()));
+            System.out.println("Seats left: " + availableSeats(selectedFlight, travelDate, sizeableBookings.getBookings()));
             System.out.println("-----------------------------");
 
 
