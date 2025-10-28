@@ -4,6 +4,27 @@ import java.util.Scanner;
 
 public class Main {
 
+    public static int availableSeats(Flight flight, String travelDate, Booking[] bookings){
+        int bookingCount = 0;
+        for (Booking booking: bookings) {
+            if (booking != null && booking.getFlight().equals(flight) && booking.getDate().equals(travelDate)) {
+                bookingCount++;
+            }
+        }
+        return flight.getSeats() - bookingCount;
+    }
+
+    public static double dynamicPrice(Flight flight, String travelDate, Booking[] bookings) {
+        int seatLeft = availableSeats(flight, travelDate, bookings);
+        double totalFare = flight.getBaseFare();
+        if(seatLeft <= 2) {
+            totalFare = 2 * totalFare;
+        } else if(seatLeft == 3) {
+            totalFare = 1.5 * totalFare;
+        }
+        return totalFare;
+    }
+
     public static void main(String[] args) {
 
         Airport yvr = new Airport("YVR", "Vancouver", "BC","Vancouver International");
@@ -101,20 +122,7 @@ public class Main {
             System.out.print("Do you want booking with baggage(Yes/No): ");
             String bookingChoice = scanner.nextLine();
 
-            int bookingCount = 0;
-            for (Booking booking: bookings) {
-                if (booking != null && booking.getFlight().equals(selectedFlight) && booking.getDate().equals(travelDate)) {
-                    bookingCount++;
-                }
-            }
-
-            int seatLeft = selectedFlight.getSeats() - bookedCount;
-            double totalFare = selectedFlight.getBaseFare();
-            if(seatLeft <= 2) {
-                totalFare = 2 * totalFare;
-            } else if(seatLeft == 3) {
-                totalFare = 1.5 * totalFare;
-            }
+           double totalFare = dynamicPrice(selectedFlight, travelDate, bookings);
 
             Booking newBooking = null;
             if (bookingChoice.equals("Yes")) {
@@ -143,7 +151,7 @@ public class Main {
             System.out.println("Route: " + selectedFlight.getSource().getCode() + " → " +
                     selectedFlight.getDestination().getCode());
             System.out.printf("Total Price: $%.2f%n", totalFare);
-            System.out.println("Seats left: " + (seatLeft - 1));
+            System.out.println("Seats left: " + availableSeats(selectedFlight, travelDate, sizableBookings.getBookings()));
             System.out.println("-----------------------------");
 
 
