@@ -7,4 +7,8 @@ public class PremiumBooking  extends Booking {
         this.baggageCount = baggageCount;
         this.baggageWeight = baggageWeight;
     }
+
+    public String toString() {
+        return  super.toString() + "\nTotal Baggage: " + this. baggageCount + "\nTotal Baggage Weight: " + this.baggageWeight + " lb";
+    }
 }

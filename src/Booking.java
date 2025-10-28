@@ -26,4 +26,12 @@ public class Booking {
     public String getDate() {
         return this.date;
     }
+
+    public String toString() {
+         return  "Passenger: " + this.passengerName +
+                "\nDate: " + this.date +
+                "\nFlight: " + this.flight.getFlightNumber() + " (" + this.flight.getAirline().getName() + ")" +
+                "\nRoute: " + this.flight.getSource().getCode() + " → " + this.flight.getDestination().getCode() +
+                "\nTotal Price: $" + this.price;
+    }
 }
