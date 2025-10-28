@@ -142,13 +142,7 @@ public class Main {
 
             System.out.println("\nBooking Confirmed:");
             System.out.println("-----------------------------");
-            System.out.println("Passenger: " + passengerName);
-            System.out.println("Date: " + travelDate);
-            System.out.println("Flight: " + selectedFlight.getFlightNumber() + " (" +
-                    selectedFlight.getAirline().getName() + ")");
-            System.out.println("Route: " + selectedFlight.getSource().getCode() + " → " +
-                    selectedFlight.getDestination().getCode());
-            System.out.printf("Total Price: $%.2f%n", totalFare);
+            System.out.println(newBooking);
             System.out.println("Seats left: " + availableSeats(selectedFlight, travelDate, sizeableBookings.getBookings()));
             System.out.println("-----------------------------");
 
